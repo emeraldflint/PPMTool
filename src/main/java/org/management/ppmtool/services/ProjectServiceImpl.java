@@ -34,4 +34,9 @@ public class ProjectServiceImpl implements ProjectService {
             throw new ProjectIdException("Project ID '" + project.getProjectIdentifier() + "' already exist");
         }
     }
+
+    @Override
+    public Iterable<Project> findAllProjects() {
+        return projectRepository.findAll();
+    }
 }
