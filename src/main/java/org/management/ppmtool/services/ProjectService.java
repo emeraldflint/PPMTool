@@ -11,4 +11,6 @@ public interface ProjectService {
     Iterable<Project> findAllProjects();
 
     void deleteProjectByIdentifier(String projectId);
+
+    Project updateProject(Project project);
 }

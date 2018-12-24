@@ -17,6 +17,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Project findProjectByIdentifier(String projectId) {
         Project project = projectRepository.findByProjectIdentifier(projectId);
+
         if (project == null) {
             throw new ProjectIdException("Project ID '" + projectId + "' doesn't exist");
         }
@@ -43,10 +44,22 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public void deleteProjectByIdentifier(String projectId) {
         Project project = projectRepository.findByProjectIdentifier(projectId.toUpperCase());
+
         if (project == null) {
             throw new ProjectIdException("Can't delete project with ID '" + projectId + "'. This project doesn't exist");
         }
 
         projectRepository.delete(project);
+    }
+
+    @Override
+    public Project updateProject(Project project) {
+        Project existingProject = projectRepository.findById(project.getId()).orElseGet(null);
+
+        if (existingProject == null) {
+            throw new ProjectIdException("Can't update project with ID '" + project.getId() + "'. This project doesn't exist");
+        }
+
+        return projectRepository.save(project);
     }
 }
