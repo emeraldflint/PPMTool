@@ -5,4 +5,6 @@ import org.management.ppmtool.domain.Project;
 public interface ProjectService {
 
     Project saveOrUpdateProject(Project project);
+
+    Project findProjectByIdentifier(String projectId);
 }
