@@ -1,7 +1,9 @@
 package org.management.ppmtool.services;
 
+import org.management.ppmtool.domain.Backlog;
 import org.management.ppmtool.domain.Project;
 import org.management.ppmtool.exeptions.ProjectIdException;
+import org.management.ppmtool.repositories.BacklogRepository;
 import org.management.ppmtool.repositories.ProjectRepository;
 import org.springframework.stereotype.Service;
 
@@ -9,9 +11,11 @@ import org.springframework.stereotype.Service;
 public class ProjectServiceImpl implements ProjectService {
 
     private ProjectRepository projectRepository;
+    private BacklogRepository backlogRepository;
 
-    ProjectServiceImpl(ProjectRepository projectRepository) {
+    ProjectServiceImpl(ProjectRepository projectRepository, BacklogRepository backlogRepository) {
         this.projectRepository = projectRepository;
+        this.backlogRepository = backlogRepository;
     }
 
     @Override
@@ -25,14 +29,25 @@ public class ProjectServiceImpl implements ProjectService {
         return project;
     }
 
-    @Override
     public Project saveOrUpdateProject(Project project) {
         try {
             project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
 
+            if (project.getId() == null) {
+                Backlog backlog = new Backlog();
+                project.setBacklog(backlog);
+                backlog.setProject(project);
+                backlog.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
+            }
+
+            if (project.getId() != null) {
+                project.setBacklog(backlogRepository.findByProjectIdentifier(project.getProjectIdentifier().toUpperCase()));
+            }
+
             return projectRepository.save(project);
-        } catch (Exception exception) {
-            throw new ProjectIdException("Project ID '" + project.getProjectIdentifier() + "' already exist");
+
+        } catch (Exception e) {
+            throw new ProjectIdException("Project ID '" + project.getProjectIdentifier().toUpperCase() + "' already exists");
         }
     }
 
@@ -58,6 +73,10 @@ public class ProjectServiceImpl implements ProjectService {
 
         if (existingProject == null) {
             throw new ProjectIdException("Can't update project with ID '" + project.getId() + "'. This project doesn't exist");
+        }
+
+        if ((existingProject.getId() != null && project.getId() != null) && existingProject.getId().equals(project.getId())) {
+            project.setBacklog(backlogRepository.findByProjectIdentifier(project.getProjectIdentifier().toUpperCase()));
         }
 
         return projectRepository.save(project);
