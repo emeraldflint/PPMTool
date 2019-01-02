@@ -10,4 +10,6 @@ public interface ProjectTaskService {
     ProjectTask findPTByProjectSequence(String backlog_id, String pt_id);
 
     ProjectTask updateByProjectSequence(ProjectTask updatedTask, String backlog_id, String pt_id);
+
+    void deletePTByProjectSequence(String backlog_id, String pt_id);
 }
