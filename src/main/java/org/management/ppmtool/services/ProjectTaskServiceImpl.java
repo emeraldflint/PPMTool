@@ -44,4 +44,9 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
 
         return projectTaskRepository.save(projectTask);
     }
+
+    @Override
+    public Iterable<ProjectTask> findBacklogById(String id) {
+        return projectTaskRepository.findByProjectIdentifierOrderByPriority(id);
+    }
 }
