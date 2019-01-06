@@ -1,5 +1,8 @@
 package org.management.ppmtool.services;
 
-interface UserService {
+import org.management.ppmtool.domain.User;
+
+public interface UserService {
+    User saveUser(User newUser);
 
 }
