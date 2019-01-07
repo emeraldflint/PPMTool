@@ -42,6 +42,11 @@ public class Project {
     @JsonIgnore
     private Backlog backlog;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", updatable = false, nullable = false)
+    @JsonIgnore
+    private User user;
+
     @PrePersist
     protected void onCreate() {
         this.created_At = new Date();
