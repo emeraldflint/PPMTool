@@ -42,10 +42,11 @@ public class Project {
     @JsonIgnore
     private Backlog backlog;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", updatable = false, nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private User user;
+
+    private String projectLeader;
 
     @PrePersist
     protected void onCreate() {
